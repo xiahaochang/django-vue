@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -71,13 +72,30 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'backend.wsgi.application'
 
-
+# DRF 配置
 REST_FRAMEWORK = {
-    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler', # 配置自定义异常处理
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'common.authentication.JWTAuthentication',
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.AllowAny',  # 示例：允许所有访问
-    ]
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'common.pagination.StandardPagination',
+    'PAGE_SIZE': 10,
+    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler',
 }
+
+# JWT 配置
+JWT_CONFIG = {
+    'EXPIRATION_DELTA': timedelta(hours=24),
+    'ALGORITHM': 'HS256',
+}
+# REST_FRAMEWORK = {
+#     'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler', # 配置自定义异常处理
+#     'DEFAULT_PERMISSION_CLASSES': [
+#         'rest_framework.permissions.AllowAny',  # 示例：允许所有访问
+#     ]
+# }
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 

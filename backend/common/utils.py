@@ -1,7 +1,7 @@
+import re
 import hashlib
 import jwt
 import datetime
-import re
 from django.conf import settings
 from rest_framework import status
 from rest_framework.response import Response
@@ -18,7 +18,6 @@ def md5_encrypt(password):
     md5 = hashlib.md5()
     md5.update(password.encode('utf-8'))
     return md5.hexdigest()
-
 
 def format_response(code, msg, data=None, http_status=None):
     """
@@ -52,7 +51,6 @@ def format_response(code, msg, data=None, http_status=None):
     
     return Response(response_data, status=http_status)
 
-
 def generate_jwt_token(user):
     """
     生成JWT Token
@@ -62,7 +60,7 @@ def generate_jwt_token(user):
         JWT token字符串
     """
     # 设置token过期时间（24小时后）
-    expiration_time = datetime.datetime.utcnow() + datetime.timedelta(hours=24)
+    expiration_time = datetime.datetime.utcnow() + settings.JWT_CONFIG['EXPIRATION_DELTA']
     
     # 构建payload
     payload = {
@@ -73,9 +71,8 @@ def generate_jwt_token(user):
     }
     
     # 生成token（需要设置SECRET_KEY）
-    token = jwt.encode(payload, settings.SECRET_KEY, algorithm='HS256')
+    token = jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.JWT_CONFIG['ALGORITHM'])
     return token
-
 
 def verify_password(input_password, stored_encrypted_password):
     """
@@ -89,7 +86,6 @@ def verify_password(input_password, stored_encrypted_password):
     encrypted_input = md5_encrypt(input_password)
     return encrypted_input == stored_encrypted_password
 
-
 def validate_email(email):
     """
     验证邮箱格式
@@ -100,7 +96,6 @@ def validate_email(email):
     """
     pattern = r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
     return re.match(pattern, email) is not None
-
 
 def get_client_ip(request):
     """
@@ -116,7 +111,6 @@ def get_client_ip(request):
     else:
         ip = request.META.get('REMOTE_ADDR')
     return ip
-
 
 class ResponseCode:
     """响应状态码常量类"""
