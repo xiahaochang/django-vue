@@ -21,6 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     # ... 其他URL模式
     path('api-auth/', include('rest_framework.urls')),
-    path('Login/', include('Login.urls')),
+    path('login/', include('Login.urls')),
 ]
 

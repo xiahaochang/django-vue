@@ -1,5 +1,5 @@
 # django-vue
-django5.2+vue3+mysql
+python3.14+django5.2+vue3+mysql8.0
 
 
 ## Django部分
@@ -16,8 +16,6 @@ django5.2+vue3+mysql
 8. **安全性**：密码 MD5 加密，Token 认证
 
 这个完整的项目结构可以直接运行，包含了所有必要的功能和组件。
-
-
 
 ### 运行步骤
 
