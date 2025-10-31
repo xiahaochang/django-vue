@@ -23,7 +23,7 @@ export function register(data: RegisterRequest): Promise<ApiResponse<User>> {
 // 获取用户信息
 export function getUserInfo(): Promise<ApiResponse<User>> {
   return request({
-    url: '/users/me/',
+    url: '/login/users/me/',
     method: 'get',
   })
 }

@@ -1,7 +1,6 @@
 from rest_framework.views import APIView
 from rest_framework.permissions import AllowAny
 from django.utils import timezone
-from ..models import User
 from ..serializers import LoginSerializer, RegisterSerializer
 from common.utils import format_response, ResponseCode, generate_jwt_token
 

@@ -30,3 +30,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
         if not value.isalnum():
             raise serializers.ValidationError("用户名只能包含字母和数字")
         return value
+
+class CurrentUserSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(read_only=True)
+    created_at = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = User
+        fields = ['id', 'username', 'email', 'is_active', 'created_at']
+    
+    def get_created_at(self, obj):
+        if obj.created_at:
+            return obj.created_at.isoformat()
+        return None

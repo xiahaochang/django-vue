@@ -36,6 +36,9 @@
                 {{ formatDate(authStore.user?.last_login) }}
               </el-descriptions-item>
             </el-descriptions>
+            <el-button type="primary" @click="getUserInfomation" class="login-button">
+              获取用户信息
+            </el-button>
           </div>
         </div>
       </el-card>
@@ -48,12 +51,17 @@ import { onMounted } from 'vue'
 import { SuccessFilled } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
 import AppLayout from '@/components/common/AppLayout.vue'
+import { getUserInfo } from '@/api/auth'
 
 const authStore = useAuthStore()
 
 const formatDate = (dateString?: string): string => {
   if (!dateString) return '未知'
   return new Date(dateString).toLocaleString('zh-CN')
+}
+
+const getUserInfomation = async (): Promise<void> => {
+  await authStore.getUser()
 }
 
 onMounted(() => {

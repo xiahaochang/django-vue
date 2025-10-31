@@ -1,4 +1,5 @@
 from rest_framework.views import APIView
+from common.authentication import JWTAuthentication
 from common.utils import (
     format_response, 
     ResponseCode
@@ -6,9 +7,10 @@ from common.utils import (
 from rest_framework.generics import ListAPIView, RetrieveAPIView, UpdateAPIView
 from django.db.models import Q
 from ..models import User
-from ..serializers import UserListSerializer, UserDetailSerializer, UserUpdateSerializer
+from ..serializers import UserListSerializer, UserDetailSerializer, UserUpdateSerializer, CurrentUserSerializer
 from common.pagination import StandardPagination
 from ..permissions import IsAdminOrReadOnly, UserProfilePermission
+from rest_framework.permissions import IsAuthenticated
 
 
 class UserListView(ListAPIView):
@@ -65,3 +67,25 @@ class UserUpdateView(UpdateAPIView):
             msg="用户信息更新成功",
             data=response.data
         )
+
+class CurrentUserView(APIView):
+    """获取当前登录用户信息"""
+    authentication_classes = [JWTAuthentication]  # 使用JWT认证
+    # permission_classes = [IsAuthenticated]  # 要求登录
+    
+    def get(self, request):
+        """获取当前用户信息"""
+        user = request.user
+        
+        return format_response(
+            code=ResponseCode.SUCCESS,
+            msg="获取用户信息成功",
+            data={
+                'id': str(user.id),
+                'username': user.username,
+                'email': user.email,
+                'is_active': user.is_active,
+                'created_at': user.created_at.isoformat() if user.created_at else None
+            }
+        )
+        

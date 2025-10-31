@@ -1,5 +1,5 @@
 from .auth import LoginView, RegisterView
-from .user import UserListView, UserDetailView, UserUpdateView
+from .user import UserListView, UserDetailView, UserUpdateView, CurrentUserView
 
 __all__ = [
     'LoginView',
@@ -7,4 +7,5 @@ __all__ = [
     'UserListView',
     'UserDetailView', 
     'UserUpdateView',
+    'CurrentUserView',
 ]

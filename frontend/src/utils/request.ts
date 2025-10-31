@@ -34,6 +34,7 @@ service.interceptors.response.use(
 
     // 根据后端返回格式调整
     if (res.code === 200 || res.code === 201) {
+      ElMessage.success(res.msg)
       return res
     } else {
       ElMessage.error(res.msg || '请求失败')
@@ -41,17 +42,21 @@ service.interceptors.response.use(
     }
   },
   (error: any) => {
+    console.error('API Error:', error)
+    console.error('Response:', error.response)
+
     if (error.response?.status === 401) {
       removeToken()
       ElMessage.error('登录已过期，请重新登录')
       // 跳转到登录页
       window.location.href = '/login'
-    } else if (error.response?.status === 403) {
-      ElMessage.error('没有权限访问该资源')
+    } else if (error.response?.status === 500) {
+      ElMessage.error('服务器内部错误，请稍后重试')
+      console.error('Server Error Details:', error.response?.data)
     } else if (error.response?.status === 404) {
       ElMessage.error('请求的资源不存在')
-    } else if (error.response?.status >= 500) {
-      ElMessage.error('服务器内部错误，请稍后重试')
+    } else if (error.response?.status === 403) {
+      ElMessage.error('没有权限访问该资源')
     } else {
       ElMessage.error(error.response?.data?.msg || '网络错误')
     }

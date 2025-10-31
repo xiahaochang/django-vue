@@ -83,7 +83,6 @@ const handleLogin = async (): Promise<void> => {
     if (valid) {
       loading.value = true
       await authStore.userLogin(loginForm)
-      ElMessage.success('登录成功！')
       router.push('/')
     }
   } catch (error: any) {

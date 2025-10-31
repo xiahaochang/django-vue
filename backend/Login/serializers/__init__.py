@@ -1,5 +1,5 @@
 from .auth import LoginSerializer, RegisterSerializer
-from .user import UserListSerializer, UserDetailSerializer, UserUpdateSerializer
+from .user import UserListSerializer, UserDetailSerializer, UserUpdateSerializer, CurrentUserSerializer
 
 __all__ = [
     'LoginSerializer',
@@ -7,4 +7,5 @@ __all__ = [
     'UserListSerializer',
     'UserDetailSerializer',
     'UserUpdateSerializer',
+    'CurrentUserSerializer',
 ]

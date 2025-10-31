@@ -13,6 +13,10 @@ class JWTAuthentication(authentication.BaseAuthentication):
         # 从请求头获取 token
         auth_header = request.META.get('HTTP_AUTHORIZATION', '')
         
+        # 如果没有 Authorization 头，返回 None 让其他认证类处理
+        if not auth_header:
+            return None
+        
         if not auth_header.startswith('Bearer '):
             return None
         
@@ -20,11 +24,17 @@ class JWTAuthentication(authentication.BaseAuthentication):
         
         try:
             # 验证 token
-            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.JWT_CONFIG['ALGORITHM']])
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=['HS256'])
             user_id = payload.get('user_id')
             
+            if not user_id:
+                raise AuthenticationFailed('无效的Token')
+            
             # 获取用户
-            user = User.objects.get(id=user_id)
+            try:
+                user = User.objects.get(id=user_id)
+            except User.DoesNotExist:
+                raise AuthenticationFailed('用户不存在')
             
             # 检查用户是否激活
             if not user.is_active:
@@ -36,5 +46,9 @@ class JWTAuthentication(authentication.BaseAuthentication):
             raise AuthenticationFailed('Token已过期')
         except jwt.InvalidTokenError:
             raise AuthenticationFailed('无效的Token')
-        except User.DoesNotExist:
-            raise AuthenticationFailed('用户不存在')
+        except Exception as e:
+            # 记录其他异常
+            import logging
+            logger = logging.getLogger(__name__)
+            logger.error(f"JWT认证异常: {str(e)}")
+            raise AuthenticationFailed('认证失败')

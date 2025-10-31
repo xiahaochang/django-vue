@@ -48,9 +48,11 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',  # 这个必须存在
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'common.middleware.RequestLoggingMiddleware',
+    'common.middleware.ExceptionHandlingMiddleware',
 ]
 
 ROOT_URLCONF = 'backend.urls'
@@ -75,15 +77,16 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 # DRF 配置
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        'common.authentication.JWTAuthentication',
+        'common.authentication.JWTAuthentication',  # 你的JWT认证类
     ],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    # 'DEFAULT_PERMISSION_CLASSES': [
+    #     'rest_framework.permissions.IsAuthenticated',
+    # ],
+    'EXCEPTION_HANDLER': 'rest_framework.views.exception_handler',
     'DEFAULT_PAGINATION_CLASS': 'common.pagination.StandardPagination',
     'PAGE_SIZE': 10,
-    'EXCEPTION_HANDLER': 'common.exceptions.custom_exception_handler',
 }
+
 
 # JWT 配置
 JWT_CONFIG = {
