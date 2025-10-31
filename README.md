@@ -94,11 +94,9 @@ curl -X GET http://127.0.0.1:8000/api/users/USER_UUID/ \
 
 ### 步骤 1：使用官方脚手架创建项目
 
-bash
-
-```
+```bash
 # 使用 Vue 官方脚手架创建项目
-npm create vue@latest vue3-ts-app
+npm create vue@latest frontend
 
 # 进入项目目录
 cd vue3-ts-app
@@ -106,8 +104,6 @@ cd vue3-ts-app
 # 安装依赖
 npm install
 ```
-
-
 
 在创建过程中选择以下特性：
 
@@ -120,9 +116,7 @@ npm install
 
 ### 步骤 2：安装额外依赖
 
-bash
-
-```
+```bash
 # 安装 UI 库和 HTTP 客户端
 npm install element-plus @element-plus/icons-vue axios sass
 
@@ -130,21 +124,13 @@ npm install element-plus @element-plus/icons-vue axios sass
 npm install -D @types/node
 ```
 
-
-
 ### 步骤 3：启动开发服务器
 
-bash
-
-```
+```bash
 npm run dev
 ```
 
-
-
 ## 📁 完整的项目目录结构
-
-text
 
 ```
 vue3-ts-app/
@@ -194,27 +180,19 @@ vue3-ts-app/
 
 ### 第一步：创建项目
 
-bash
-
-```
+```bash
 npm create vue@latest vue3-ts-app
 # 选择 TypeScript, Vue Router, Pinia, ESLint, Prettier
 cd vue3-ts-app
 ```
 
-
-
 ### 第二步：安装依赖
 
-bash
-
-```
+```bash
 npm install
 npm install element-plus @element-plus/icons-vue axios sass
 npm install -D @types/node
 ```
-
-
 
 ### 第三步：替换文件内容
 
@@ -222,33 +200,21 @@ npm install -D @types/node
 
 ### 第四步：类型检查
 
-bash
-
-```
+```bash
 npm run type-check
 ```
 
-
-
 ### 第五步：代码格式化
 
-bash
-
-```
+```bash
 npm run lint
 ```
 
-
-
 ### 第六步：启动项目
 
-bash
-
-```
+```bash
 npm run dev
 ```
-
-
 
 ### 第七步：访问应用
 
@@ -276,24 +242,18 @@ npm run dev
 
 在 `src/utils/request.ts` 中配置后端 API 地址：
 
-typescript
-
-```
+```typescript
 const service: AxiosInstance = axios.create({
   baseURL: '/api', // 确保与 Django 后端 API 路径匹配
   timeout: 10000
 })
 ```
 
-
-
 ### 代理配置
 
 在 `vite.config.ts` 中配置代理，解决跨域问题：
 
-typescript
-
-```
+```typescript
 server: {
   proxy: {
     '/api': {
@@ -303,8 +263,6 @@ server: {
   }
 }
 ```
-
-
 
 ## 🐛 常见问题解决
 
