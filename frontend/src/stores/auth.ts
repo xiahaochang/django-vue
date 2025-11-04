@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
-import { getToken, setToken, removeToken } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUser, removeUser } from '@/utils/auth'
 import { login, register, getUserInfo } from '@/api/auth'
 import type { LoginRequest, RegisterRequest, User, AuthState } from '@/types/auth'
 
@@ -19,6 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
       user.value = userInfo
       isLoggedIn.value = true
       setToken(userToken)
+      setUser(userInfo)
 
       return response.data
     } catch (error) {
@@ -53,6 +54,7 @@ export const useAuthStore = defineStore('auth', () => {
     user.value = null
     isLoggedIn.value = false
     removeToken()
+    removeUser()
   }
 
   // 初始化认证状态

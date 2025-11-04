@@ -99,7 +99,7 @@ curl -X GET http://127.0.0.1:8000/api/users/USER_UUID/ \
 npm create vue@latest frontend
 
 # 进入项目目录
-cd vue3-ts-app
+cd frontend
 
 # 安装依赖
 npm install
@@ -133,7 +133,7 @@ npm run dev
 ## 📁 完整的项目目录结构
 
 ```
-vue3-ts-app/
+frontend/
 ├── public/
 │   └── favicon.ico
 ├── src/
@@ -181,9 +181,9 @@ vue3-ts-app/
 ### 第一步：创建项目
 
 ```bash
-npm create vue@latest vue3-ts-app
+npm create vue@latest frontend
 # 选择 TypeScript, Vue Router, Pinia, ESLint, Prettier
-cd vue3-ts-app
+cd frontend
 ```
 
 ### 第二步：安装依赖
