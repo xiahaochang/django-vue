@@ -1,16 +1,36 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '@/stores/auth'
+import BabyTreeView from '@/views/BabyTreeView.vue'
 
 const routes: Array<RouteRecordRaw> = [
+  // {
+  //   path: '/',
+  //   name: 'Home',
+  //   component: () => import('@/views/HomeView.vue'),
+  //   meta: {
+  //     requiresAuth: true,
+  //     title: '首页',
+  //   },
+  // },
   {
     path: '/',
-    name: 'Home',
-    component: () => import('@/views/HomeView.vue'),
+    redirect: '/babytree',
+  },
+  {
+    path: '/babytree',
+    name: 'BabyTree',
+    component: BabyTreeView,
     meta: {
       requiresAuth: true,
-      title: '首页',
+      title: '宝贝成长树',
     },
+  },
+  {
+    path: '/familylove',
+    name: 'FamilyLove',
+    // component: () => import('@/views/FamilyLoveView.vue'),
+    component: () => import('@/views/HomeView.vue'),
   },
   {
     path: '/login',
@@ -42,23 +62,23 @@ const router = createRouter({
 })
 
 // 路由守卫
-router.beforeEach((to, from, next) => {
-  const authStore = useAuthStore()
+// router.beforeEach((to, from, next) => {
+//   const authStore = useAuthStore()
 
-  // 设置页面标题
-  if (to.meta.title) {
-    document.title = `${to.meta.title} - Vue 管理系统`
-  }
+//   // 设置页面标题
+//   if (to.meta.title) {
+//     document.title = `${to.meta.title} - Little Peach`
+//   }
 
-  if (to.meta.requiresAuth && !authStore.isLoggedIn) {
-    // 需要登录但未登录，跳转到登录页
-    next('/login')
-  } else if (to.meta.requiresGuest && authStore.isLoggedIn) {
-    // 需要游客状态但已登录，跳转到首页
-    next('/')
-  } else {
-    next()
-  }
-})
+//   if (to.meta.requiresAuth && !authStore.isLoggedIn) {
+//     // 需要登录但未登录，跳转到登录页
+//     next('/login')
+//   } else if (to.meta.requiresGuest && authStore.isLoggedIn) {
+//     // 需要游客状态但已登录，跳转到首页
+//     next('/')
+//   } else {
+//     next()
+//   }
+// })
 
 export default router

@@ -31,3 +31,26 @@ textarea {
     font-family: inherit;
     outline: none;
 }
+
+
+/* 自定义滚动条样式 */
+::-webkit-scrollbar {
+    width: 8px;
+    color: rgba(255, 150, 150, 0.5) rgba(255, 225, 225, 0.3);
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(255, 225, 225, 0.3);
+    border-radius: 4px;
+    margin: 4px 0;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 150, 150, 0.5);
+    border-radius: 4px;
+    transition: background 0.3s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 120, 120, 0.7);
+}

@@ -165,12 +165,12 @@ const router = useRouter()
 const route = useRoute()
 const authStore = useAuthStore()
 
-const activeNav = ref('dashboard')
+const activeNav = ref('babytree')
 
 // 导航项数据
 const navItems = [
-  { id: 'dashboard', text: '宝贝成长树', path: '/dashboard', icon: '🍑' },
-  { id: 'community', text: '爸爸妈妈爱你', path: '/community', icon: '🧑🏻‍👩🏻‍👧🏻' },
+  { id: 'babytree', text: '宝贝成长树', path: '/babytree', icon: '🍑' },
+  { id: 'familylove', text: '爸爸妈妈爱你', path: '/familylove', icon: '🧑🏻‍👩🏻‍👧🏻' },
   // { id: 'gallery', text: '作品集', path: '/gallery', icon: '🎨' },
   // { id: 'projects', text: '项目', path: '/projects', icon: '📂' },
   // { id: 'inspire', text: '灵感', path: '/inspire', icon: '✨' },
@@ -638,7 +638,7 @@ const handleCommand = async (command: string) => {
 .main-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 30px;
+  padding: 12px;
   width: 100%;
   height: 100%;
   box-sizing: border-box;
@@ -647,7 +647,7 @@ const handleCommand = async (command: string) => {
 
   .content-wrapper {
     background-color: white;
-    border-radius: 20px;
+    border-radius: 12px;
     box-shadow: 0 10px 30px rgba(255, 200, 200, 0.1);
     overflow: hidden;
     flex: 1;
@@ -664,6 +664,7 @@ const handleCommand = async (command: string) => {
     /* 自定义滚动条样式 */
     &::-webkit-scrollbar {
       width: 8px;
+      color: rgba(255, 150, 150, 0.5) rgba(255, 225, 225, 0.3);
     }
 
     &::-webkit-scrollbar-track {
@@ -681,8 +682,6 @@ const handleCommand = async (command: string) => {
     &::-webkit-scrollbar-thumb:hover {
       background: rgba(255, 120, 120, 0.7);
     }
-
-    scrollbar-color: rgba(255, 150, 150, 0.5) rgba(255, 225, 225, 0.3);
   }
 }
 
