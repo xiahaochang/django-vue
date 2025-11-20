@@ -25,16 +25,12 @@
       </div>
 
       <!-- 添加/编辑记录弹窗 -->
-      <el-dialog
-        v-model="showAddDialog"
-        :title="editingRecord ? '编辑成长记录' : '添加成长记录'"
-        width="600px"
-      >
-        <el-form :model="recordForm" label-width="80px">
-          <el-form-item label="标题">
+      <el-dialog v-model="showAddDialog" :title="editingRecord ? '编辑成长记录' : '添加成长记录'">
+        <el-form :model="recordForm" :rules="formRules" ref="formRef" label-width="80px">
+          <el-form-item label="标题" prop="title">
             <el-input v-model="recordForm.title" placeholder="请输入记录标题" />
           </el-form-item>
-          <el-form-item label="内容">
+          <el-form-item label="内容" prop="content">
             <el-input
               v-model="recordForm.content"
               type="textarea"
@@ -42,13 +38,30 @@
               placeholder="记录下这个珍贵的时刻..."
             />
           </el-form-item>
-          <el-form-item label="记录时间">
+          <el-form-item label="记录时间" prop="recordTime">
             <el-date-picker
               v-model="recordForm.recordTime"
               type="date"
               placeholder="选择日期"
               value-format="YYYY-MM-DD"
             />
+          </el-form-item>
+          <el-form-item label="照片" prop="images">
+            <div class="upload-container">
+              <el-upload
+                v-model:file-list="recordForm.images"
+                action="#"
+                list-type="picture-card"
+                :auto-upload="false"
+                :multiple="true"
+                :limit="9"
+                :on-exceed="handleExceed"
+                :on-change="handleImageChange"
+                :on-remove="handleImageRemove"
+              >
+                <el-icon><Plus /></el-icon>
+              </el-upload>
+            </div>
           </el-form-item>
           <el-form-item label="标签">
             <el-select
@@ -85,7 +98,13 @@
 
 <script setup lang="ts">
 import { ref, reactive, computed, onMounted } from 'vue'
-import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  ElMessage,
+  ElMessageBox,
+  type FormInstance,
+  type FormRules,
+  type UploadFile,
+} from 'element-plus'
 import { Plus } from '@element-plus/icons-vue'
 import type { BabyRecord } from '@/types/babyTree'
 import { useBabyTreeStore } from '@/stores/babyTree'
@@ -94,6 +113,7 @@ import BabyTreeDetail from '@/components/babyTree/BabyTreeDetail.vue'
 import AppLayout from '@/components/common/AppLayout.vue'
 
 const babyTreeStore = useBabyTreeStore()
+const formRef = ref<FormInstance>()
 
 const showAddDialog = ref(false)
 const showDetail = ref(false)
@@ -199,8 +219,27 @@ const recordForm = reactive({
   content: '',
   recordTime: '',
   tags: [] as string[],
-  images: [] as string[],
+  images: [] as UploadFile[],
 })
+
+// 表单验证规则
+const formRules: FormRules = {
+  title: [{ required: true, message: '请输入记录标题', trigger: 'blur' }],
+  content: [{ required: true, message: '请输入记录内容', trigger: 'blur' }],
+  recordTime: [{ required: true, message: '请选择记录时间', trigger: 'change' }],
+  images: [
+    {
+      validator: (_, value, callback) => {
+        if (!value || value.length === 0) {
+          callback(new Error('请至少上传一张照片'))
+        } else {
+          callback()
+        }
+      },
+      trigger: 'change',
+    },
+  ],
+}
 
 const isAdmin = computed(() => babyTreeStore.currentUser.role === 'admin')
 
@@ -216,7 +255,7 @@ const handleEdit = (record: BabyRecord) => {
     content: record.content,
     recordTime: record.recordTime,
     tags: [...record.tags],
-    images: [...record.images],
+    images: record.images.map((url) => ({ url, name: url, status: 'success' })),
   })
   showAddDialog.value = true
 }
@@ -244,42 +283,64 @@ const handleCommentAdded = (recordId: string, content: string) => {
   ElMessage.success('评论发布成功')
 }
 
-const handleSaveRecord = () => {
-  if (!recordForm.title.trim()) {
-    ElMessage.warning('请输入记录标题')
-    return
-  }
+// 图片上传处理
+const handleImageChange = (file: UploadFile) => {
+  if (file.raw) {
+    const isImage = file.raw.type.startsWith('image/')
+    const isLt2M = file.raw.size / 1024 / 1024 < 20
 
-  if (!recordForm.content.trim()) {
-    ElMessage.warning('请输入记录内容')
-    return
+    if (!isImage) {
+      ElMessage.error('只能上传图片文件')
+      return false
+    }
+    if (!isLt2M) {
+      ElMessage.error('图片大小不能超过 20MB')
+      return false
+    }
   }
+  return true
+}
 
-  if (!recordForm.recordTime) {
-    ElMessage.warning('请选择记录时间')
-    return
+const handleExceed = () => {
+  ElMessage.warning('最多只能上传9张照片')
+}
+
+const handleImageRemove = () => {
+  // 图片删除后的处理
+}
+
+const handleSaveRecord = async () => {
+  if (!formRef.value) return
+
+  try {
+    await formRef.value.validate()
+
+    if (editingRecord.value) {
+      babyTreeStore.updateRecord(editingRecord.value.id, {
+        ...recordForm,
+        images: recordForm.images.map((file) => file.url || ''),
+        recordBy: babyTreeStore.currentUser.username,
+      })
+      ElMessage.success('更新成功')
+    } else {
+      babyTreeStore.addRecord({
+        ...recordForm,
+        images: recordForm.images.map((file) => file.url || ''),
+        recordBy: babyTreeStore.currentUser.username,
+      })
+      ElMessage.success('添加成功')
+    }
+
+    showAddDialog.value = false
+    resetForm()
+  } catch (error) {
+    // 验证失败，不执行保存操作
   }
-
-  if (editingRecord.value) {
-    babyTreeStore.updateRecord(editingRecord.value.id, {
-      ...recordForm,
-      recordBy: babyTreeStore.currentUser.username,
-    })
-    ElMessage.success('更新成功')
-  } else {
-    babyTreeStore.addRecord({
-      ...recordForm,
-      recordBy: babyTreeStore.currentUser.username,
-    })
-    ElMessage.success('添加成功')
-  }
-
-  showAddDialog.value = false
-  resetForm()
 }
 
 const resetForm = () => {
   editingRecord.value = null
+  formRef.value?.clearValidate()
   Object.assign(recordForm, {
     title: '',
     content: '',
@@ -354,6 +415,26 @@ onMounted(() => {
   padding: 10px 10px;
   height: calc(100% - 100px);
   overflow: hidden auto;
+}
+
+// 上传图片样式调整
+.upload-container {
+  :deep(.el-upload-list__item) {
+    width: 100px;
+    height: 100px;
+  }
+
+  :deep(.el-upload) {
+    width: 100px;
+    height: 100px;
+    line-height: 100px;
+  }
+}
+
+.upload-tip {
+  margin-top: 8px;
+  color: #999;
+  font-size: 12px;
 }
 
 @media (max-width: 768px) {

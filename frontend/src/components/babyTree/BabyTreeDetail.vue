@@ -1,16 +1,16 @@
 <template>
-  <el-dialog
-    v-model="visible"
-    :title="record?.title"
-    width="100%"
-    :before-close="handleClose"
-    custom-class="baby-tree-detail"
-  >
+  <el-dialog v-model="visible" :title="record?.title" fullscreen :before-close="handleClose">
     <!-- 图片展示 -->
     <div v-if="record.images.length > 0" class="detail-images">
-      <el-carousel v-if="record.images.length > 1" :interval="5000" arrow="always" height="400px">
+      <el-carousel
+        v-if="record.images.length > 1"
+        arrow="always"
+        height="400px"
+        type="card"
+        :autoplay="false"
+      >
         <el-carousel-item v-for="image in record.images" :key="image">
-          <img :src="image" :alt="record.title" class="carousel-image" />
+          <img class="carousel-image" :src="image" :alt="record.title" />
         </el-carousel-item>
       </el-carousel>
       <img v-else :src="record.images[0]" :alt="record.title" class="single-image" />
@@ -23,7 +23,11 @@
           <span class="record-by">记录人：{{ record.recordBy }}</span>
           <span class="record-time">时间：{{ formatDate(record.recordTime) }}</span>
         </div>
-        <button class="like-btn detail-like" :class="{ liked: record.isLiked }" @click="handleLike">
+        <button
+          class="like-btn detail-like"
+          :class="{ liked: record.isLiked }"
+          @click.stop="handleLike"
+        >
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none">
             <path
               d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"
@@ -138,29 +142,6 @@ const handleCommentAdded = (content: string) => {
 }
 </script>
 
-<style lang="scss">
-.baby-tree-detail {
-  .el-dialog__header {
-    margin: 0;
-    padding: 20px 20px 0;
-
-    .el-dialog__title {
-      color: #ff6b6b;
-      font-size: 20px;
-      font-weight: 600;
-    }
-  }
-
-  .el-dialog__body {
-    padding: 20px;
-  }
-
-  .el-dialog__footer {
-    padding: 0 20px 20px;
-  }
-}
-</style>
-
 <style lang="scss" scoped>
 .detail-images {
   margin-bottom: 24px;
@@ -171,7 +152,7 @@ const handleCommentAdded = (content: string) => {
   .single-image {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
   }
 }
 
@@ -202,6 +183,35 @@ const handleCommentAdded = (content: string) => {
   .record-time {
     font-size: 12px;
     color: #999;
+  }
+}
+
+.like-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  border: 1px solid rgba(255, 200, 200, 0.5);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.8);
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    border-color: #ff6b6b;
+    color: #ff6b6b;
+
+    path {
+      stroke: #ff6b6b;
+    }
+  }
+
+  &.liked {
+    border-color: #ff6b6b;
+    background: rgba(255, 107, 107, 0.1);
+    color: #ff6b6b;
   }
 }
 

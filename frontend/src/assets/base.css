@@ -33,9 +33,42 @@ textarea {
 }
 
 
+/* 全局修改 el-dialog 样式 */
+.el-dialog {
+    background-color: #fff9f5 !important;
+    border-radius: 16px !important;
+    box-shadow: 0 8px 32px rgba(255, 182, 193, 0.3) !important;
+    border: 1px solid #ffd1dc !important;
+}
+
+.el-dialog__header {
+    margin: 0 !important;
+    padding: 16px 20px !important;
+    border-radius: 16px 16px 0 0 !important;
+    border-bottom: 1px solid #ffb6c1 !important;
+}
+
+.el-dialog__title {
+    color: #d23669 !important;
+    font-weight: 600 !important;
+}
+
+.el-dialog__body {
+    background: transparent !important;
+    padding: 20px !important;
+}
+
+.el-dialog__footer {
+    border-radius: 0 0 16px 16px !important;
+    border-top: 1px solid #ffd1dc !important;
+    padding: 12px 20px !important;
+}
+
+
 /* 自定义滚动条样式 */
 ::-webkit-scrollbar {
     width: 8px;
+    height: 8px;
     color: rgba(255, 150, 150, 0.5) rgba(255, 225, 225, 0.3);
 }
 
@@ -53,4 +86,102 @@ textarea {
 
 ::-webkit-scrollbar-thumb:hover {
     background: rgba(255, 120, 120, 0.7);
+}
+
+
+.el-dialog {
+    width: 800px;
+}
+
+@media (max-width: 1500px) {
+    .el-dialog {
+        width: 1100px;
+    }
+}
+
+@media (max-width: 1100px) {
+    .el-dialog {
+        width: 800px;
+    }
+
+    .peach-header .header-content {
+        padding: 0 20px;
+    }
+
+    .nav-section .peach-nav .nav-item {
+        padding: 10px 15px;
+
+        .nav-text {
+            font-size: 14px;
+        }
+    }
+
+    .user-section .user-profile .user-info {
+        display: none;
+    }
+
+    .main-content {
+        padding: 20px;
+
+        .content-area {
+            padding: 20px;
+        }
+    }
+}
+
+@media (max-width: 900px) {
+    .el-dialog {
+        width: 90% !important;
+    }
+
+    .nav-section .peach-nav .nav-item .nav-text {
+        display: none;
+    }
+
+    .nav-section .peach-nav .nav-item .nav-icon {
+        margin-right: 0;
+        font-size: 18px;
+    }
+
+    .brand-section .logo .brand-name {
+        font-size: 20px;
+    }
+
+    .main-content {
+        padding: 15px;
+
+        .content-area {
+            padding: 15px;
+        }
+    }
+}
+
+@media (max-width: 600px) {
+    .el-dialog {
+        width: 95% !important;
+    }
+
+    .peach-header {
+        height: 70px;
+    }
+
+    .peach-header .header-content {
+        padding: 0 15px;
+    }
+
+    .brand-section .logo .brand-name {
+        display: none;
+    }
+
+    .action-buttons {
+        margin-right: 10px;
+    }
+
+    .main-content {
+        padding: 10px;
+
+        .content-area {
+            padding: 15px;
+        }
+    }
 }

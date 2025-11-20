@@ -27,18 +27,18 @@
           <!-- 中央导航菜单 -->
           <div class="nav-section">
             <nav class="peach-nav">
-              <a
+              <router-link
                 v-for="item in navItems"
                 :key="item.id"
-                :href="item.path"
+                :to="item.path"
                 class="nav-item"
                 :class="{ active: activeNav === item.id }"
-                @click.prevent="setActiveNav(item.id)"
+                @click="setActiveNav(item)"
               >
                 <span class="nav-icon">{{ item.icon }}</span>
                 <span class="nav-text">{{ item.text }}</span>
                 <span class="nav-underline"></span>
-              </a>
+              </router-link>
             </nav>
           </div>
 
@@ -155,7 +155,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue'
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ArrowDown, User, Setting, SwitchButton, Collection } from '@element-plus/icons-vue'
@@ -182,9 +182,16 @@ const userAvatar = computed(() => {
 })
 
 // 设置当前激活的导航项
-const setActiveNav = (navId: string) => {
-  activeNav.value = navId
-  // 在实际应用中，这里应该进行路由跳转
+const setActiveNav = (item: any) => {
+  activeNav.value = item.id
+}
+// 根据当前路由更新激活状态
+const updateActiveNav = () => {
+  const currentPath = route.path
+  const currentNav = navItems.find((item) => item.path === currentPath)
+  if (currentNav) {
+    activeNav.value = currentNav.id
+  }
 }
 
 const handleCommand = async (command: string) => {
@@ -214,6 +221,18 @@ const handleCommand = async (command: string) => {
       break
   }
 }
+
+// 监听路由变化
+watch(
+  () => route.path,
+  () => {
+    updateActiveNav()
+  },
+)
+// 初始化时设置激活状态
+onMounted(() => {
+  updateActiveNav()
+})
 </script>
 
 <style lang="scss" scoped>
@@ -660,104 +679,6 @@ const handleCommand = async (command: string) => {
     padding: 30px;
     flex: 1;
     overflow-y: auto;
-
-    /* 自定义滚动条样式 */
-    &::-webkit-scrollbar {
-      width: 8px;
-      color: rgba(255, 150, 150, 0.5) rgba(255, 225, 225, 0.3);
-    }
-
-    &::-webkit-scrollbar-track {
-      background: rgba(255, 225, 225, 0.3);
-      border-radius: 4px;
-      margin: 4px 0;
-    }
-
-    &::-webkit-scrollbar-thumb {
-      background: rgba(255, 150, 150, 0.5);
-      border-radius: 4px;
-      transition: background 0.3s ease;
-    }
-
-    &::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 120, 120, 0.7);
-    }
-  }
-}
-
-// 响应式设计
-@media (max-width: 1100px) {
-  .peach-header .header-content {
-    padding: 0 20px;
-  }
-
-  .nav-section .peach-nav .nav-item {
-    padding: 10px 15px;
-
-    .nav-text {
-      font-size: 14px;
-    }
-  }
-
-  .user-section .user-profile .user-info {
-    display: none;
-  }
-
-  .main-content {
-    padding: 20px;
-
-    .content-area {
-      padding: 20px;
-    }
-  }
-}
-
-@media (max-width: 900px) {
-  .nav-section .peach-nav .nav-item .nav-text {
-    display: none;
-  }
-
-  .nav-section .peach-nav .nav-item .nav-icon {
-    margin-right: 0;
-    font-size: 18px;
-  }
-
-  .brand-section .logo .brand-name {
-    font-size: 20px;
-  }
-
-  .main-content {
-    padding: 15px;
-
-    .content-area {
-      padding: 15px;
-    }
-  }
-}
-
-@media (max-width: 600px) {
-  .peach-header {
-    height: 70px;
-  }
-
-  .peach-header .header-content {
-    padding: 0 15px;
-  }
-
-  .brand-section .logo .brand-name {
-    display: none;
-  }
-
-  .action-buttons {
-    margin-right: 10px;
-  }
-
-  .main-content {
-    padding: 10px;
-
-    .content-area {
-      padding: 15px;
-    }
   }
 }
 </style>

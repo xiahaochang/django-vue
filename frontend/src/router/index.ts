@@ -29,8 +29,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/familylove',
     name: 'FamilyLove',
-    // component: () => import('@/views/FamilyLoveView.vue'),
-    component: () => import('@/views/HomeView.vue'),
+    component: () => import('@/views/FamilyLoveView.vue'),
   },
   {
     path: '/login',

@@ -243,6 +243,9 @@ const handleLike = () => {
   &:hover {
     border-color: #ff6b6b;
     color: #ff6b6b;
+    path {
+      stroke: #ff6b6b;
+    }
   }
 
   &.liked {
