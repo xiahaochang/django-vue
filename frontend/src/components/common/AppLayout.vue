@@ -138,6 +138,13 @@
             </div>
           </div>
         </div>
+        <!-- 记录详情弹窗 -->
+        <ConfirmDialog
+          v-model="showConfirm"
+          :record="confirmData!"
+          @cancle="showConfirm = !showConfirm"
+          @confirm="handleConfirm"
+        />
       </el-header>
 
       <!-- 主内容区域 -->
@@ -155,11 +162,13 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, ref, watch, onMounted, reactive } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { ArrowDown, User, Setting, SwitchButton, Collection } from '@element-plus/icons-vue'
 import { useAuthStore } from '@/stores/auth'
+import ConfirmDialog from '@/components/babyTree/ConfirmDialog.vue'
+import type { ConfirmData } from '@/types/dataSource'
 
 const router = useRouter()
 const route = useRoute()
@@ -197,18 +206,7 @@ const updateActiveNav = () => {
 const handleCommand = async (command: string) => {
   switch (command) {
     case 'logout':
-      try {
-        await ElMessageBox.confirm('确定要退出登录吗？', '提示', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning',
-        })
-        authStore.logout()
-        ElMessage.success('已退出登录')
-        router.push('/login')
-      } catch {
-        // 用户取消操作
-      }
+      showConfirm.value = !showConfirm.value
       break
     case 'profile':
       ElMessage.info('个人资料功能开发中...')
@@ -219,6 +217,22 @@ const handleCommand = async (command: string) => {
     case 'collection':
       ElMessage.info('我的收藏功能开发中...')
       break
+  }
+}
+
+const showConfirm = ref(false)
+const confirmData = reactive<ConfirmData>({
+  id: '123',
+  title: '提示',
+  content: '确定要退出登录吗？',
+})
+const handleConfirm = () => {
+  try {
+    authStore.logout()
+    ElMessage.success('已退出登录')
+    router.push('/login')
+  } catch {
+    // 用户取消操作
   }
 }
 
@@ -665,14 +679,14 @@ onMounted(() => {
   flex-direction: column;
 
   .content-wrapper {
-    background-color: white;
+    background-color: transparent;
     border-radius: 12px;
     box-shadow: 0 10px 30px rgba(255, 200, 200, 0.1);
     overflow: hidden;
     flex: 1;
     display: flex;
     flex-direction: column;
-    border: 1px solid rgba(255, 225, 225, 0.5);
+    border: 2px solid rgba(255, 225, 225, 0.5);
   }
 
   .content-area {

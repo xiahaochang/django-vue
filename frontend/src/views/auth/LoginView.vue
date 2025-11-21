@@ -4,7 +4,7 @@
       <div class="login-form-wrapper">
         <div class="login-header">
           <h1 class="login-title">用户登录</h1>
-          <p class="login-subtitle">欢迎回到 Vue 管理系统</p>
+          <p class="login-subtitle">欢迎回到 小桃子 的世界</p>
         </div>
 
         <el-form

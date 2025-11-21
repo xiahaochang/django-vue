@@ -102,7 +102,7 @@
         </button>
 
         <!-- 功能按钮 -->
-        <div class="fab-actions">
+        <div class="fab-actions" v-if="isExpanded">
           <!-- 回到顶部按钮 -->
           <button class="fab-action" @click="scrollToTop" title="回到顶部">
             <el-icon><Top /></el-icon>
