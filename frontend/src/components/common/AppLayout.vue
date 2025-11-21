@@ -676,7 +676,7 @@ onMounted(() => {
   }
 
   .content-area {
-    padding: 30px;
+    padding: 24px 8px 24px 24px;
     flex: 1;
     overflow-y: auto;
   }
